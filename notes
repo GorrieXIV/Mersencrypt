@@ -1,0 +1,15 @@
+A Mersenne number is a number of the form p = 2^n - 1, where n is a prime.
+For any number x mod p and y = 2^z, for z is a positive integer, 
+x * y is a cyclic shift of x by z - this means the hamming weight of x is unchanged under
+multiplication by powers of 2.
+
+Consider H = F/G (mod p), where the binary representation of F and G modulo p has low Hamming weight.
+If the above is true, it turns out that H looks pseudorandom, i.e., it is hard to distinguish H from
+a random integer mod p.
+
+to encrypt a bit b, the encryption algorithm chooses two random numbers A,B modulo p of low
+Hamming weight and then outputs
+C := (-1)^b * (A * H + B)
+Where H is the public key and G is the private key.
+Given the private key, one can compute C * G to decrypt the bit b by checking whether C * G has
+low Hamming weight (corresponding to b = 0) or high Hamming weight (corresponding to b = 1)
