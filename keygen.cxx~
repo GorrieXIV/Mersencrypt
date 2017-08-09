@@ -78,8 +78,8 @@ ZZ genNBHW(long n, long h) {
 		while (x<17) {
 			//p = RandomBnd(conv<ZZ>(n));
 			pint = rand() % 17;
-			if (table[pint] == 0) { //can't use a ZZ as an index, generate an int then convert to ZZ
-				table[pint] = 1;
+			if (table[p] == 0) { //can't use a ZZ as an index, generate an int then convert to ZZ
+				table[p] = 1;
 				x++;
 				p = power(conv<ZZ>(2), p);
 				q = q + p;
