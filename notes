@@ -13,3 +13,5 @@ C := (-1)^b * (A * H + B)
 Where H is the public key and G is the private key.
 Given the private key, one can compute C * G to decrypt the bit b by checking whether C * G has
 low Hamming weight (corresponding to b = 0) or high Hamming weight (corresponding to b = 1)
+
+g++ -std=c++11 enc.cxx -lntl -lgmp -o enc

@@ -5,6 +5,8 @@
  * Key Generation file - See README for use instructions           *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#include "mersencrypt.h"
+
 #include <NTL/ZZ_p.h>
 #include <NTL/ZZ.h>
 #include <stdio.h>
@@ -13,16 +15,10 @@
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
-#include <unordered_map>
-
-//#define n 1279
-//#define h 17
+#include <string>
 
 using namespace std;
 using namespace NTL;
-
-/* function contracts */
-ZZ genNBHW(long n, long h);
 
 /* global variables */
 long n = 1279;
@@ -41,61 +37,36 @@ int main (int argc, char** argv) {
 	seed = (const unsigned char*) malloc (4 * sizeof(char));
 	seed = (const unsigned char*) &var;
 	SetSeed(seed, 4); //hash address of var to seed randomness
+
 	ZZ F;
-	cout << "suh\n";
 	F = genNBHW(n, h); //generate n-bit number with hamming weight h
 	ZZ G;
-	cout << "suh2\n";
 	G = genNBHW(n, h); //generate n-bit number with hamming weight h
 
 	ZZ_p::init(p);
 	ZZ_p H = (conv<ZZ_p>(F))/(conv<ZZ_p>(G));
 	
-	//if (argc == 2) {
-		//freopen(argv[0],"w",stdout);
-		//cout << H;
-		//freopen(argv[1],"w",stdout);
-		//cout << G;
-	//} else {
-		//freopen(pfile,"w",stdout);
+	streambuf *coutbuf = cout.rdbuf();
+	
+	//write H to pk.key
+	ofstream outpk("pk.key");
+	cout.rdbuf(outpk.rdbuf());
 	cout << H;
-		//freopen(sfile,"w",stdout);
+
+	printf("Public key H stored in pk.key\n");
+
+	cout.rdbuf(coutbuf);
+
+	//write G to sk.key
+	ofstream outsk("sk.key");
+	cout.rdbuf(outsk.rdbuf());
 	cout << G;
-	//}
+
+	printf("Secret key G stored in sk.key\n");
+
+	cout.rdbuf(coutbuf);
 
 	return 0;
-}
-
-ZZ genNBHW(long n, long h) {
-	int hamCheck = 1;
-	ZZ q, p;
-	int pint;
-	int table[17] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	int x = 0;
-	while (hamCheck == 1) {
-		q = RandomLen_ZZ(n);	
-		q = ZZ();
-		while (x<17) {
-			//p = RandomBnd(conv<ZZ>(n));
-			pint = rand() % 17;
-			if (table[pint] == 0) { //can't use a ZZ as an index, generate an int then convert to ZZ
-				table[pint] = 1;
-				x++;
-				p = power(conv<ZZ>(2), p);
-				q = q + p;
-				cout << p << "\n";
-				cout << q << "\n";
-				cout << weight(q) << "\n";
-			} 
-		}
-		
-		cout << h << "\n";
-		//if (weight(q) == h) {
-		hamCheck = 0;
-		//}
-	}
-	
-	return q;
 }
 
 
